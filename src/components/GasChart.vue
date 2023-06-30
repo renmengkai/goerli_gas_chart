@@ -13,7 +13,13 @@ onMounted(() => {
     useDirtyRect: false
   });
   const provider = new ethers.JsonRpcProvider('https://ethereum-goerli.publicnode.com')
-
+  provider.getFeeData().then((feeData) => {
+    data.value.push([
+      new Date().toLocaleTimeString().replace(/^\D*/, ''),
+      ethers.formatUnits(feeData.gasPrice, 'gwei')
+    ]);
+    freshChart(myChart)
+  });
   timer.value = setInterval(() => {
     if (data.value.length > 20) {
       data.value.shift();
