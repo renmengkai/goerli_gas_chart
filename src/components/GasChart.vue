@@ -1,6 +1,6 @@
 <script setup>
 import * as echarts from "echarts";
-import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import * as ethers from "ethers";
 
 const data = ref([])
@@ -12,7 +12,7 @@ onMounted(() => {
     renderer: 'canvas',
     useDirtyRect: false
   });
-  const provider = new ethers.JsonRpcProvider('https://ethereum-goerli.publicnode.com')
+  const provider = new ethers.JsonRpcProvider('https://opbnb-mainnet-rpc.bnbchain.org', 204)
   provider.getFeeData().then((feeData) => {
     data.value.push([
       new Date().toLocaleTimeString().replace(/^\D*/, ''),
@@ -44,48 +44,28 @@ const freshChart = (myChart) => {
     return item[1];
   });
   const option = {
-    visualMap: [
-      {
-        show: false,
-        type: 'continuous',
-        seriesIndex: 0,
-        min: 0,
-        max: 100
-      }
-    ],
     title: [
       {
         left: 'center',
-        text: 'Goerli Testnet gas price （ gwei ）',
+        text: 'opBNB mainNet gas price （ Gwei ）',
       }
     ],
-    tooltip: {
-      trigger: 'axis'
+    xAxis: {
+      type: 'category',
+      data: dateList
     },
-    xAxis: [
-      {
-        data: dateList
-      },
-    ],
-    yAxis: [
-      {},
-    ],
-    grid: [
-      {
-        bottom: '10%'
-      },
-      {
-        top: '10%'
-      }
-    ],
+    yAxis: {
+      type: 'value'
+    },
     series: [
       {
+        data: valueList,
         type: 'line',
-        showSymbol: false,
-        data: valueList
-      },
+        smooth: true,
+        areaStyle: {}
+      }
     ]
-  }
+  };
   myChart.setOption(option);
 }
 
